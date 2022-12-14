@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: env-config
+data:
+  POSTGRES_HOST: microservice-project3.cedpynqrc7of.us-east-1.rds.amazonaws.com
+  POSTGRES_DB: microserviceproject3
+  AWS_BUCKET: microservice-project3-xuanlt1
+  AWS_REGION: us-east-1
+  AWS_PROFILE: default
+  JWT_SECRET: hello
+  URL: http://localhost:8100
+
