@@ -1,0 +1,36 @@
+name: Node.js CI
+
+on:
+  push:
+    branches: [ develop ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [14.x]
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+      - run: docker build -t udagram-api-feed ./udagram-api-feed
+      - run: docker build -t udagram-api-user ./udagram-api-user
+      - run: docker build -t udagram-frontend ./udagram-frontend
+      - run: docker build -t reverseproxy ./udagram-reverseproxy
+      - run: docker tag udagram-api-user xuanlt1991/udagram-api-user:v0.0.1
+      - run: docker tag udagram-api-feed xuanlt1991/udagram-api-feed:v0.0.1
+      - run: docker tag udagram-frontend xuanlt1991/udagram-frontend:v0.0.1
+      - run: docker tag reverseproxy xuanlt1991/reverseproxy:v1
+      - run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+      - run: docker push xuanlt1991/udagram-api-user:v0.0.1
+      - run: docker push xuanlt1991/udagram-api-feed:v0.0.1
+      - run: docker push xuanlt1991/udagram-frontend:v0.0.1
+      - run: docker push xuanlt1991/reverseproxy:v0.0.1
